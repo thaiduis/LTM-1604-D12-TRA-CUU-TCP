@@ -20,3 +20,7 @@
 </div>
 ## 📖 1. Giới thiệu
 Ứng dụng tra cứu từ điển Anh – Việt được xây dựng theo mô hình client–server sử dụng giao thức TCP Socket. Hệ thống cho phép nhiều người dùng (client) cùng lúc gửi yêu cầu tra cứu từ vựng tiếng Anh và nhận lại nghĩa tiếng Việt từ phía server. Toàn bộ quá trình truyền và nhận dữ liệu diễn ra trên nền TCP, đảm bảo tính tin cậy và toàn vẹn của thông tin.
+## 📖 2. Công nghệ sử dụng
+## 📖 3. Một số hình ảnh hệ thống
+## 📖 4. Các bước cài đặt
+## 📖 5. Liên hệ 
