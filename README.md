@@ -18,13 +18,21 @@
 [![DaiNam University](https://img.shields.io/badge/DaiNam%20University-orange?style=for-the-badge)](https://dainam.edu.vn)
 
 </div>
-![Java](https://img.shields.io/badge/Java-8%2B-007396?logo=java&logoColor=white)
-![Swing](https://img.shields.io/badge/GUI-Swing-6DB33F?logo=oracle&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-8.0%2B-4479A1?logo=mysql&logoColor=white)
-![Maven](https://img.shields.io/badge/Maven-3.6%2B-C71A36?logo=apachemaven&logoColor=white)
-![TCP](https://img.shields.io/badge/Protocol-TCP%20Socket-0A66C2)
-![License](https://img.shields.io/badge/License-MIT-green)
-![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-informational)
+<p align="center">
+  <img src="https://img.shields.io/badge/AIOTLAB-%20-8BC34A?style=for-the-badge&labelColor=8BC34A&color=8BC34A&logoColor=white" alt="AIOTLAB" />
+  <img src="https://img.shields.io/badge/FACULTY%20OF%20INFORMATION%20TECHNOLOGY-%20-0A66C2?style=for-the-badge&labelColor=0A66C2&color=0A66C2&logoColor=white" alt="Faculty of IT" />
+  <img src="https://img.shields.io/badge/DAINAM%20UNIVERSITY-%20-F57C00?style=for-the-badge&labelColor=F57C00&color=F57C00&logoColor=white" alt="Dainam University" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Java-8%2B-007396?style=for-the-badge&logo=java&logoColor=white" alt="Java" />
+  <img src="https://img.shields.io/badge/GUI-Swing-6DB33F?style=for-the-badge&logo=oracle&logoColor=white" alt="Swing" />
+  <img src="https://img.shields.io/badge/MySQL-8.0%2B-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL" />
+  <img src="https://img.shields.io/badge/Maven-3.6%2B-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white" alt="Maven" />
+  <img src="https://img.shields.io/badge/Protocol-TCP%20Socket-0A66C2?style=for-the-badge" alt="TCP" />
+  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License" />
+  <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-informational?style=for-the-badge" alt="Platform" />
+</p>
 
 ## 📖 1. Giới thiệu
 
