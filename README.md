@@ -64,15 +64,15 @@ Bạn có thể thêm ảnh chụp màn hình vào thư mục `docs/images/` và
 
 - 🖥️ Giao diện Server:
 
-![Server GUI](docs/images/server-gui.png)
+![Server GUI](docs/Server-gui.png)
 
 - 💻 Giao diện Client:
 
-![Client GUI](docs/images/client-gui.png)
+![Client GUI](docs/Client-gui.png)
 
 - 🔎 Kết quả tra cứu:
 
-![Search Result](docs/images/search-result.png)
+![Search Result](docs/tra-cuu.png)
 
 > Lưu ý: Đổi tên file ảnh tương ứng nếu bạn sử dụng đường dẫn khác.
 
