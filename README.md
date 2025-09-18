@@ -4,7 +4,7 @@
     </a>
 </h2>
 <h2 align="center">
-   Ứng dụng tra cứu từ điển Anh–Việt (TCP Socket)
+   Ứng dụng tra cứu từ điển Anh–Việt (TCP)
 </h2>
 <div align="center">
     <p align="center">
