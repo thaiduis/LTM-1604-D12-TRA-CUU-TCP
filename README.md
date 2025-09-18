@@ -66,8 +66,6 @@ Bạn có thể thêm ảnh chụp màn hình vào thư mục `docs/images/` và
 
 ![Search Result](docs/tra-cuu.png)
 
-> Lưu ý: Đổi tên file ảnh tương ứng nếu bạn sử dụng đường dẫn khác.
-
 ---
 
 ## 🧭 4. Các bước cài đặt
