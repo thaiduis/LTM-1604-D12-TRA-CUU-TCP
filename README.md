@@ -135,8 +135,3 @@ Mặc định server lắng nghe trên `localhost:12345` (có thể thay đổi 
 - 📞 Điện thoại: 0342637906
 
 ---
-
-Ghi chú thêm:
-- 🔐 Kiểm tra Firewall/Port nếu client không kết nối được tới server (mặc định 12345)
-- 🧪 Đảm bảo MySQL đã chạy và thông tin kết nối chính xác
-- 📦 Thư viện MySQL Connector đã được thêm trong `lib/` và/hoặc quản lý bởi Maven
