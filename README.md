@@ -52,8 +52,6 @@ Cấu trúc mã nguồn chính:
 
 ## 🖼️ 3. Một số hình ảnh hệ thống
 
-Bạn có thể thêm ảnh chụp màn hình vào thư mục `docs/images/` và tham chiếu như dưới đây:
-
 - 🖥️ Giao diện Server:
 
 ![Server GUI](docs/Server-gui.png)
