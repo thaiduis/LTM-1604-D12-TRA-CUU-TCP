@@ -132,6 +132,5 @@ Mặc định server lắng nghe trên `localhost:12345` (có thể thay đổi 
 ## 📫 5. Liên hệ
 
 - ✉️ Liên hệ email: thaiitkk2004@gmail.com
-- 📞 Điện thoại: 0342637906
 
 ---
