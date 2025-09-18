@@ -135,8 +135,7 @@ Mặc định server lắng nghe trên `localhost:12345` (có thể thay đổi 
 
 ## 📫 5. Liên hệ
 
-- 🐞 Mở issue trên repository nếu bạn gặp lỗi hoặc có đề xuất tính năng
-- ✉️ Hoặc liên hệ email: thaiitkk2004@gmail.com
+- ✉️ Liên hệ email: thaiitkk2004@gmail.com
 - 📞 Điện thoại: 0342637906
 
 ---
