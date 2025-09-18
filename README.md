@@ -43,12 +43,15 @@ Các chức năng chính:
 
 ## 🛠️ 2. Công nghệ sử dụng
 
-- ☕ Java 8+ (JDK)
-- 🪟 Java Swing (GUI)
-- 🔌 TCP Socket (Client/Server)
-- 🗄️ JDBC + MySQL Connector (`lib/mysql-connector-java-8.0.33.jar`)
-- 🐬 MySQL Server 5.7+ (khuyến nghị MySQL 8)
-- 🚀 Maven (build, quản lý phụ thuộc) với `pom.xml`
+<p align="center">
+  <img src="https://img.shields.io/badge/Java-8%2B-007396?style=for-the-badge&logo=java&logoColor=white" alt="Java" />
+  <img src="https://img.shields.io/badge/GUI-Swing-6DB33F?style=for-the-badge&logo=oracle&logoColor=white" alt="Swing" />
+  <img src="https://img.shields.io/badge/MySQL-8.0%2B-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL" />
+  <img src="https://img.shields.io/badge/Maven-3.6%2B-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white" alt="Maven" />
+  <img src="https://img.shields.io/badge/Protocol-TCP%20Socket-0A66C2?style=for-the-badge" alt="TCP" />
+  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License" />
+  <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-informational?style=for-the-badge" alt="Platform" />
+</p>
 
 Cấu trúc mã nguồn chính:
 - 📦 `src/main/java/com/dictionary/client/` — Client TCP và GUI
