@@ -54,15 +54,17 @@ Cấu trúc mã nguồn chính:
 
 - 🖥️ Giao diện Server:
 
-![Server GUI](docs/Server-gui.png)
+![Server GUI](docs/Server-gui1.png)
+
+![Server GUI](docs/form.png)
 
 - 💻 Giao diện Client:
 
-![Client GUI](docs/Client-gui.png)
+![Client GUI](docs/Client.png)
 
 - 🔎 Kết quả tra cứu:
 
-![Search Result](docs/tra-cuu.png)
+![Search Result](docs/Run.png)
 
 ---
 
