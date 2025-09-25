@@ -135,6 +135,6 @@ Mặc định server lắng nghe trên `localhost:12345` (có thể thay đổi 
 
 - ✉️ Liên hệ email: thaiitkk2004@gmail.com
 
-<p alight="center">© 2025 AIoTLab, Faculty of Information Technology, DaiNam University. All rights reserved.</p>
+<p align="center">© 2025 AIoTLab, Faculty of Information Technology, DaiNam University. All rights reserved.</p>
 
 ---
