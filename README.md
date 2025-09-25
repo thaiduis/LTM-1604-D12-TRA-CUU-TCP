@@ -60,11 +60,11 @@ Cấu trúc mã nguồn chính:
 
 - 💻 Giao diện Client:
 
-![Client GUI](docs/Client 2.png)
+![Client GUI](docs/Client2.png)
 
 - 🔎 Kết quả tra cứu:
 
-![Search Result](docs/Ketquac.png)
+![Search Result](docs/Ketquatc.png)
 
 ---
 
