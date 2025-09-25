@@ -132,8 +132,9 @@ Mặc định server lắng nghe trên `localhost:12345` (có thể thay đổi 
 ---
 
 ## 📫 5. Liên hệ
-
-- ✉️ Liên hệ email: thaiitkk2004@gmail.com
+- Họ và tên: Vũ Duy Thái
+- Khoa: Công nghệ thông tin - Trường Đại học Đại Nam
+- Liên hệ email: thaiitkk2004@gmail.com
 
 <p align="center">© 2025 AIoTLab, Faculty of Information Technology, DaiNam University. All rights reserved.</p>
 
