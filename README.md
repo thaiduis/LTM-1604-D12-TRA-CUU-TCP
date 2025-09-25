@@ -54,9 +54,9 @@ Cấu trúc mã nguồn chính:
 
 - 🖥️ Giao diện Server:
 
-![Server GUI](docs/Server-gui1.png)
+![Server GUI](docs/Server.png)
 
-![Server GUI](docs/form.png)
+![Server GUI](docs/Fomr1.png) ![Server GUI](docs/Fomr2.png) ![Server GUI](docs/Fomr3.png)
 
 - 💻 Giao diện Client:
 
