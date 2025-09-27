@@ -1,4 +1,4 @@
-<img width="1278" height="837" alt="image" src="https://github.com/user-attachments/assets/0f19a32e-245e-4a4b-b22f-a94958979dcf" /><h2 align="center">
+<h2 align="center">
     <a href="https://dainam.edu.vn/vi/khoa-cong-nghe-thong-tin">
     🎓 Faculty of Information Technology (DaiNam University)
     </a>
@@ -55,6 +55,8 @@ Cấu trúc mã nguồn chính:
 - 🖥️ Giao diện Server:
 
 ![Server GUI](docs/Server.png)
+
+![Server GUI](docs/Lichsu.png)
 
 ![Server GUI](docs/Form.png) 
 
