@@ -1,0 +1,9 @@
+C:\Users\ADMIN\eclipse-workspace\demo\src\main\java\com\dictionary\client\DictionaryClient.java 
+C:\Users\ADMIN\eclipse-workspace\demo\src\main\java\com\dictionary\client\DictionaryClientGUI.java 
+C:\Users\ADMIN\eclipse-workspace\demo\src\main\java\com\dictionary\database\DatabaseConnection.java 
+C:\Users\ADMIN\eclipse-workspace\demo\src\main\java\com\dictionary\database\DictionaryDAO.java 
+C:\Users\ADMIN\eclipse-workspace\demo\src\main\java\com\dictionary\model\Word.java 
+C:\Users\ADMIN\eclipse-workspace\demo\src\main\java\com\dictionary\server\DictionaryFormDialog.java 
+C:\Users\ADMIN\eclipse-workspace\demo\src\main\java\com\dictionary\server\DictionaryServer.java 
+C:\Users\ADMIN\eclipse-workspace\demo\src\main\java\com\dictionary\server\DictionaryServerGUI.java 
+C:\Users\ADMIN\eclipse-workspace\demo\src\main\java\com\dictionary\ui\UIUtils.java 
