@@ -25,10 +25,15 @@
 
 Các chức năng chính:
 - 🔎 Tra cứu nghĩa tiếng Việt theo từ tiếng Anh
-- 🧩 Tìm các từ chứa một từ khóa (search containing)
+- 🔄 Tra cứu ngược từ tiếng Việt sang tiếng Anh
+- 🧩 Tìm các từ chứa một từ khóa (search containing) - hỗ trợ cả Anh và Việt
+- 📊 Hiển thị thông tin chi tiết: từ loại, phiên âm, định nghĩa, ví dụ
+- 📝 Lưu lịch sử tra cứu với giao diện trực quan và xuất CSV
 - 🗂️ Quản lý từ điển: thêm, sửa, xóa mục từ (qua server/DAO)
 - 👥 Hỗ trợ nhiều client kết nối đồng thời
-- 🖥️ Giao diện đồ họa (GUI) cho cả phía Server và Client
+- 🖥️ Giao diện đồ họa Material Design cho cả phía Server và Client
+- 📱 Giao diện responsive với animation và hiệu ứng mượt mà
+- 🔗 Theo dõi trạng thái kết nối real-time
 
 ---
 
@@ -43,10 +48,14 @@ Các chức năng chính:
 </p>
 
 Cấu trúc mã nguồn chính:
-- 📦 `src/main/java/com/dictionary/client/` — Client TCP và GUI
-- 🖧 `src/main/java/com/dictionary/server/` — Server TCP và GUI
+- 📦 `src/main/java/com/dictionary/client/` — Client TCP, GUI và CSV Logger
+- 🖧 `src/main/java/com/dictionary/server/` — Server TCP, GUI và Form Dialog
 - 🔗 `src/main/java/com/dictionary/database/` — Kết nối DB và DAO
 - 📘 `src/main/java/com/dictionary/model/` — Lớp mô hình `Word`
+- 🎨 `src/main/java/com/dictionary/ui/` — Material Design UI Components
+- 📁 `database/` — Schema SQL và cấu trúc cơ sở dữ liệu
+- 📄 `*.csv` — File log lịch sử tra cứu và hoạt động
+- 🚀 `*.bat` — Script build và chạy ứng dụng
 
 ---
 
