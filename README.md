@@ -56,8 +56,6 @@ Cấu trúc mã nguồn chính:
 
 ![Server GUI](docs/Server.png)
 
-![Server GUI](docs/Lichsu.png)
-
 ![Server GUI](docs/Form.png) 
 
 - 💻 Giao diện Client:
