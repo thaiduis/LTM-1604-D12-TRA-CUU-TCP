@@ -28,6 +28,7 @@ public class DictionaryClientGUI extends JFrame {
     private boolean fromHistoryClick = false;
     private JComboBox<String> directionCombo; // Dropdown chọn chiều dịch
     private CSVLogger csvLogger; // Logger để ghi lịch sử ra CSV
+    private JPopupMenu suggestionPopup;
 
     // Panel chứa card chi tiết
     private JPanel detailContentPanel;
@@ -50,6 +51,9 @@ public class DictionaryClientGUI extends JFrame {
         setLocationRelativeTo(null);
         getContentPane().setBackground(MaterialUIUtils.BACKGROUND);
 
+        suggestionPopup = new JPopupMenu();
+
+
         // Trạng thái kết nối
         connectionStatusLabel = new JLabel("Đang kết nối...", SwingConstants.CENTER);
         connectionStatusLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
@@ -57,6 +61,16 @@ public class DictionaryClientGUI extends JFrame {
 
         // Search field Material
         searchField = MaterialUIUtils.createSearchField();
+
+        searchField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { showSuggestions(); }
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { showSuggestions(); }
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { showSuggestions(); }
+        });
+        
         
         // Direction combo (Anh -> Việt, Việt -> Anh)
         directionCombo = MaterialUIUtils.createMaterialComboBox(
@@ -138,6 +152,55 @@ public class DictionaryClientGUI extends JFrame {
         // Panel chính
         mainPanel = new AnimatedPanel(new BorderLayout(20, 20));
     }
+
+    private void showSuggestions() {
+        String text = searchField.getText().trim();
+        suggestionPopup.setVisible(false);
+        suggestionPopup.removeAll();
+    
+        if (text.isEmpty() || client == null || !client.isConnected()) return;
+    
+        String direction = (String) directionCombo.getSelectedItem();
+        List<Word> suggestions;
+    
+        if ("Anh → Việt".equals(direction)) {
+            suggestions = client.searchWordsContaining(text);
+        } else {
+            suggestions = client.searchVietnameseWordsContaining(text);
+        }
+    
+        if (suggestions.isEmpty()) return;
+    
+        // ✅ Chỉ lấy 5 gợi ý đầu tiên
+        int limit = Math.min(5, suggestions.size());
+    
+        for (int i = 0; i < limit; i++) {
+            Word w = suggestions.get(i);
+    
+            String label = "Anh → Việt".equals(direction)
+                    ? (w.getEnglishWord() + " - " + w.getVietnameseMeaning())
+                    : (w.getVietnameseMeaning() + " - " + w.getEnglishWord());
+    
+            JMenuItem item = new JMenuItem(label);
+            item.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+            item.addActionListener(e -> {
+                if ("Anh → Việt".equals(direction)) {
+                    searchField.setText(w.getEnglishWord());
+                } else {
+                    searchField.setText(w.getVietnameseMeaning());
+                }
+                suggestionPopup.setVisible(false);
+                performSearch();
+            });
+            suggestionPopup.add(item);
+        }
+    
+        try {
+            Rectangle rect = searchField.modelToView(searchField.getDocument().getLength());
+            suggestionPopup.show(searchField, rect.x, rect.y + 30);
+        } catch (Exception ignored) {}
+    }
+    
     
 
     private void setupLayout() {
@@ -501,7 +564,7 @@ private void displayWordDetails(String eng, String pos, String phon, String vn, 
     detailContentPanel.add(createDetailCard("Từ vựng", eng + "  /" + (phon==null?"":phon) + "/  (" + (pos==null?"":pos) + ")"));
     detailContentPanel.add(Box.createVerticalStrut(12));
 
-    detailContentPanel.add(createDetailCard("Nghĩa", vn==null?"":vn));
+    detailContentPanel.add(createDetailCard("Nghĩa tiếng Việt", vn==null?"":vn));
     detailContentPanel.add(Box.createVerticalStrut(12));
 
     detailContentPanel.add(createDetailCard("Định nghĩa", def==null?"":def));
