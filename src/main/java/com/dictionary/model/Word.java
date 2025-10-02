@@ -2,24 +2,45 @@ package com.dictionary.model;
 
 public class Word {
     private String englishWord;
-    private String partOfSpeech;    // Từ loại (noun, verb, etc.)
-    private String phoneticSpelling; // Phiên âm
+    private String partOfSpeech;
+    private String phoneticSpelling;
     private String vietnameseMeaning;
-    private String detailedDefinition; // Giải thích chi tiết
-    private String exampleSentence;    // Câu ví dụ
+    private String detailedDefinition;
+    private String exampleSentence;
+    private String imagePath; // ✅ ảnh minh họa
 
+    // Default constructor
     public Word() {
     }
 
+    // constructor đầy đủ
     public Word(String englishWord, String partOfSpeech, String phoneticSpelling,
-                String vietnameseMeaning, String detailedDefinition, String exampleSentence) {
+                String vietnameseMeaning, String detailedDefinition,
+                String exampleSentence, String imagePath) {
         this.englishWord = englishWord;
         this.partOfSpeech = partOfSpeech;
         this.phoneticSpelling = phoneticSpelling;
         this.vietnameseMeaning = vietnameseMeaning;
         this.detailedDefinition = detailedDefinition;
         this.exampleSentence = exampleSentence;
+        this.imagePath = imagePath;
     }
+
+    // constructor cũ cho backward compatibility
+    public Word(String englishWord, String partOfSpeech, String phoneticSpelling,
+                String vietnameseMeaning, String detailedDefinition,
+                String exampleSentence) {
+        this(englishWord, partOfSpeech, phoneticSpelling,
+             vietnameseMeaning, detailedDefinition, exampleSentence, null);
+    }
+
+public String getImagePath() {
+    return imagePath;
+}
+
+public void setImagePath(String imagePath) {
+    this.imagePath = imagePath;
+}
 
     public String getEnglishWord() {
         return englishWord;
