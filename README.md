@@ -63,7 +63,7 @@ Cấu trúc mã nguồn chính:
 
 - 🖥️ Giao diện Server:
 
-![Server GUI](docs/Server.png)
+![Server GUI](docs/ServerUp.png)
 
 ---
 
