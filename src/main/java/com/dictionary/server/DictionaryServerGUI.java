@@ -30,6 +30,9 @@ public class DictionaryServerGUI extends JFrame {
     private JButton updateWordButton;
     private JButton deleteWordButton;
     private JButton clearHistoryButton;
+    private JTextField searchField;
+    private JButton searchButton;
+    private JButton clearSearchButton;
 
     private DictionaryFormDialog formDialog;
 
@@ -111,7 +114,7 @@ public void clearActivityLog() {
         deleteWordButton = UIUtils.createStyledButton("Xóa từ", UIUtils.ACCENT_COLOR, new Color(200, 50, 50));
     
         // Initialize table từ điển
-        String[] columnNames = {"Từ tiếng Anh", "Từ loại", "Phiên âm", "Nghĩa tiếng Việt", "Định nghĩa chi tiết", "Ví dụ"};
+        String[] columnNames = {"Từ tiếng Anh", "Từ loại", "Phiên âm", "Nghĩa tiếng Việt", "Định nghĩa chi tiết", "Ví dụ", "Ảnh minh họa"};
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -123,7 +126,66 @@ public void clearActivityLog() {
         wordTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         wordTable.setRowHeight(40);
         wordTable.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        wordTable.setDefaultRenderer(Object.class, new ModernTableCellRenderer());
+        // Custom renderer cho toàn bộ bảng để bôi màu từ có ảnh
+        wordTable.setDefaultRenderer(Object.class, new javax.swing.table.DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
+                    boolean hasFocus, int row, int column) {
+                super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                
+                // Lấy trạng thái ảnh từ cột cuối cùng (cột 6)
+                String imageStatus = (String) table.getValueAt(row, 6);
+                
+                // Màu nền và chữ dựa trên trạng thái ảnh
+                if ("Có ảnh".equals(imageStatus)) {
+                    // Từ có ảnh - màu xanh lá nhạt
+                    if (isSelected) {
+                        setBackground(new Color(76, 175, 80)); // Xanh đậm khi chọn
+                        setForeground(Color.WHITE);
+                    } else {
+                        setBackground(new Color(232, 245, 233)); // Xanh nhạt
+                        setForeground(new Color(27, 94, 32));
+                    }
+                } else if ("Lỗi đường dẫn".equals(imageStatus)) {
+                    // Từ có lỗi ảnh - màu đỏ nhạt
+                    if (isSelected) {
+                        setBackground(new Color(244, 67, 54)); // Đỏ đậm khi chọn
+                        setForeground(Color.WHITE);
+                    } else {
+                        setBackground(new Color(255, 235, 238)); // Đỏ nhạt
+                        setForeground(new Color(183, 28, 28));
+                    }
+                } else {
+                    // Từ chưa có ảnh - màu mặc định
+                    if (isSelected) {
+                        setBackground(table.getSelectionBackground());
+                        setForeground(table.getSelectionForeground());
+                    } else {
+                        setBackground(row % 2 == 0 ? Color.WHITE : new Color(250, 250, 250));
+                        setForeground(Color.BLACK);
+                    }
+                }
+                
+                // Đặc biệt cho cột ảnh minh họa
+                if (column == 6) {
+                    setHorizontalAlignment(SwingConstants.CENTER);
+                    setFont(new Font("Segoe UI", Font.BOLD, 12));
+                    
+                    if ("Có ảnh".equals(imageStatus)) {
+                        setText("" + imageStatus);
+                    } else if ("Lỗi đường dẫn".equals(imageStatus)) {
+                        setText("" + imageStatus);
+                    } else {
+                        setText("" + imageStatus);
+                    }
+                } else {
+                    setHorizontalAlignment(SwingConstants.LEFT);
+                    setFont(new Font("Segoe UI", Font.PLAIN, 14));
+                }
+                
+                return this;
+            }
+        });
         wordTable.setShowGrid(true);
         wordTable.setGridColor(new Color(200, 200, 200));
         wordTable.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
@@ -137,6 +199,7 @@ public void clearActivityLog() {
         columnModel.getColumn(3).setPreferredWidth(200);
         columnModel.getColumn(4).setPreferredWidth(300);
         columnModel.getColumn(5).setPreferredWidth(250);
+        columnModel.getColumn(6).setPreferredWidth(120); // Cột ảnh minh họa
     
         // Refresh button
         refreshButton = UIUtils.createStyledButton("Làm mới", UIUtils.TEXT_SECONDARY, new Color(100, 110, 120));
@@ -144,6 +207,17 @@ public void clearActivityLog() {
         
         // Clear history button
         clearHistoryButton = UIUtils.createStyledButton("Xóa lịch sử", UIUtils.ACCENT_COLOR, new Color(200, 50, 50));
+        
+        // Search components
+        searchField = new JTextField(20);
+        searchField.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        searchField.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
+            BorderFactory.createEmptyBorder(8, 12, 8, 12)
+        ));
+        
+        searchButton = UIUtils.createStyledButton("Tìm kiếm", UIUtils.PRIMARY_COLOR, new Color(33, 150, 243));
+        clearSearchButton = UIUtils.createStyledButton("Xóa bộ lọc", UIUtils.TEXT_SECONDARY, new Color(100, 110, 120));
     
         // Activity log table
         String[] logColumns = {"Thời gian", "Hành động", "Chi tiết"};
@@ -161,7 +235,7 @@ public void clearActivityLog() {
     
         mainPanel = new AnimatedPanel(new BorderLayout(20, 20));
     }
-    
+
     private void setupLayout() {
         setLayout(new BorderLayout());
         ((JPanel) getContentPane()).setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -270,10 +344,21 @@ public void clearActivityLog() {
         tableHeader.setOpaque(false);
         JLabel tableTitle = new JLabel("Từ điển", SwingConstants.LEFT);
         tableTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        
+        // Search panel ở giữa
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
+        searchPanel.setOpaque(false);
+        searchPanel.add(new JLabel("Tìm kiếm:"));
+        searchPanel.add(searchField);
+        searchPanel.add(searchButton);
+        searchPanel.add(clearSearchButton);
+        
         JPanel rightHeader = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         rightHeader.setOpaque(false);
         rightHeader.add(refreshButton);
+        
         tableHeader.add(tableTitle, BorderLayout.WEST);
+        tableHeader.add(searchPanel, BorderLayout.CENTER);
         tableHeader.add(rightHeader, BorderLayout.EAST);
     
         JScrollPane tableScroll = new JScrollPane(wordTable);
@@ -334,8 +419,8 @@ public void clearActivityLog() {
         });
 
         updateWordButton.addActionListener(e -> {
-            int selectedRow = wordTable.getSelectedRow();
-            if (selectedRow >= 0) {
+                int selectedRow = wordTable.getSelectedRow();
+                if (selectedRow >= 0) {
                 Word selectedWord = getWordFromTable(selectedRow);
                 formDialog.showForUpdate(selectedWord);
             } else {
@@ -344,8 +429,8 @@ public void clearActivityLog() {
         });
 
         deleteWordButton.addActionListener(e -> {
-            int selectedRow = wordTable.getSelectedRow();
-            if (selectedRow >= 0) {
+                int selectedRow = wordTable.getSelectedRow();
+                if (selectedRow >= 0) {
                 Word selectedWord = getWordFromTable(selectedRow);
                 formDialog.showForDelete(selectedWord);
             } else {
@@ -366,24 +451,65 @@ public void clearActivityLog() {
                 clearActivityLog();
             }
         });
+        
+        // Search event handlers
+        searchButton.addActionListener(e -> performSearch());
+        clearSearchButton.addActionListener(e -> clearSearch());
+        
+        // Enter key trong search field
+        searchField.addActionListener(e -> performSearch());
+        
+        // Timer cho tự động tìm kiếm
+        javax.swing.Timer searchTimer = new javax.swing.Timer(500, e -> performAutoSearch());
+        searchTimer.setRepeats(false);
+        
+        searchField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { 
+                searchTimer.restart(); // Tự động tìm kiếm sau 500ms
+            }
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { 
+                searchTimer.restart(); // Tự động tìm kiếm sau 500ms
+            }
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { 
+                searchTimer.restart(); // Tự động tìm kiếm sau 500ms
+            }
+        });
+        
     }
 
 
     private Word getWordFromTable(int row) {
+        // Lấy lại Word object từ database để có đầy đủ thông tin ảnh
+        String englishWord = (String) tableModel.getValueAt(row, 0);
+        String partOfSpeech = (String) tableModel.getValueAt(row, 1);
+        
+        // Tìm từ trong database
+        List<Word> words = dictionaryDAO.searchWord(englishWord);
+        for (Word word : words) {
+            if (word.getPartOfSpeech().equals(partOfSpeech)) {
+                return word;
+            }
+        }
+        
+        // Fallback nếu không tìm thấy
         return new Word(
-                (String) tableModel.getValueAt(row, 0),
-                (String) tableModel.getValueAt(row, 1),
+                englishWord,
+                partOfSpeech,
                 (String) tableModel.getValueAt(row, 2),
                 (String) tableModel.getValueAt(row, 3),
                 (String) tableModel.getValueAt(row, 4),
-                (String) tableModel.getValueAt(row, 5)
+                (String) tableModel.getValueAt(row, 5),
+                null
         );
     }
 
     private void toggleServer() {
         if (server == null || !server.isRunning()) {
             startServer();
-        } else {
+            } else {
             stopServer();
         }
     }
@@ -399,8 +525,8 @@ public void clearActivityLog() {
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this,
                     "Không thể khởi động server: " + e.getMessage(),
-                    "Lỗi",
-                    JOptionPane.ERROR_MESSAGE);
+                "Lỗi",
+                JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -416,21 +542,90 @@ public void clearActivityLog() {
     }
 
     public void refreshWordList() {
-        List<Word> words = dictionaryDAO.getAllWords();
+        displayWords(dictionaryDAO.getAllWords());
+    }
+    
+    private void displayWords(List<Word> words) {
         tableModel.setRowCount(0);
         for (Word word : words) {
+            // Kiểm tra trạng thái ảnh minh họa
+            String imageStatus = "Không có";
+            if (word.getImagePath() != null && !word.getImagePath().isEmpty()) {
+                java.io.File imageFile = new java.io.File(word.getImagePath());
+                if (imageFile.exists()) {
+                    imageStatus = "Có ảnh";
+                } else {
+                    imageStatus = "Lỗi đường dẫn";
+                }
+            }
+            
             Object[] row = {
-                    word.getEnglishWord(),
-                    word.getPartOfSpeech(),
-                    word.getPhoneticSpelling(),
-                    word.getVietnameseMeaning(),
-                    word.getDetailedDefinition(),
-                    word.getExampleSentence()
+                word.getEnglishWord(),
+                word.getPartOfSpeech(),
+                word.getPhoneticSpelling(),
+                word.getVietnameseMeaning(),
+                word.getDetailedDefinition(),
+                    word.getExampleSentence(),
+                    imageStatus
             };
             tableModel.addRow(row);
         }
         // Cập nhật tổng số từ
         totalWordsLabel.setText("Tổng số từ: " + words.size());
+    }
+    
+    private void performSearch() {
+        String searchText = searchField.getText().trim();
+        performSearchWithText(searchText, true); // Log activity
+    }
+    
+    private void performAutoSearch() {
+        String searchText = searchField.getText().trim();
+        performSearchWithText(searchText, false); // Không log activity cho auto search
+    }
+    
+    private void performSearchWithText(String searchText, boolean logActivity) {
+        if (searchText.isEmpty()) {
+            refreshWordList();
+            return;
+        }
+        
+        // Tìm kiếm trong cả từ tiếng Anh và tiếng Việt
+        List<Word> englishResults = dictionaryDAO.searchWordsContaining(searchText);
+        List<Word> vietnameseResults = dictionaryDAO.searchVietnameseWordsContaining(searchText);
+        
+        // Gộp kết quả và loại bỏ trùng lặp
+        java.util.Set<String> addedWords = new java.util.HashSet<>();
+        List<Word> combinedResults = new java.util.ArrayList<>();
+        
+        for (Word word : englishResults) {
+            String key = word.getEnglishWord() + "|" + word.getPartOfSpeech();
+            if (!addedWords.contains(key)) {
+                combinedResults.add(word);
+                addedWords.add(key);
+            }
+        }
+        
+        for (Word word : vietnameseResults) {
+            String key = word.getEnglishWord() + "|" + word.getPartOfSpeech();
+            if (!addedWords.contains(key)) {
+                combinedResults.add(word);
+                addedWords.add(key);
+            }
+        }
+        
+        displayWords(combinedResults);
+        
+        // Chỉ log khi user chủ động tìm kiếm
+        if (logActivity) {
+            logActivity("Tìm kiếm", "Tìm kiếm từ khóa: " + searchText + " (" + combinedResults.size() + " kết quả)");
+        }
+    }
+    
+    private void clearSearch() {
+        searchField.setText("");
+        refreshWordList();
+        logActivity("Tìm kiếm", "Xóa bộ lọc tìm kiếm");
     }
 
     @Override
