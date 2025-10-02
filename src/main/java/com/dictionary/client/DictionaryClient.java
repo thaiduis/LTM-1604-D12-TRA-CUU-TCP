@@ -52,15 +52,16 @@ public class DictionaryClient {
             
             String[] parts = response.split("\\|");
             if (parts.length >= 2 && "SUCCESS".equals(parts[0])) {
-                for (int i = 1; i < parts.length; i += 6) {
-                    if (i + 5 < parts.length) {
+                for (int i = 1; i < parts.length; i += 7) {
+                    if (i + 6 < parts.length) {
                         Word word = new Word(
                             parts[i],      // englishWord
                             parts[i + 1],  // partOfSpeech
                             parts[i + 2],  // phoneticSpelling
                             parts[i + 3],  // vietnameseMeaning
                             parts[i + 4],  // detailedDefinition
-                            parts[i + 5]   // exampleSentence
+                            parts[i + 5],  // exampleSentence
+                            parts[i + 6]   // imagePath
                         );
                         results.add(word);
                     }
@@ -152,15 +153,16 @@ public class DictionaryClient {
             
             String[] parts = response.split("\\|");
             if (parts.length >= 2 && "SUCCESS".equals(parts[0])) {
-                for (int i = 1; i < parts.length; i += 6) {
-                    if (i + 5 < parts.length) {
+                for (int i = 1; i < parts.length; i += 7) {
+                    if (i + 6 < parts.length) {
                         Word word = new Word(
                             parts[i],      // englishWord
                             parts[i + 1],  // partOfSpeech
                             parts[i + 2],  // phoneticSpelling
                             parts[i + 3],  // vietnameseMeaning
                             parts[i + 4],  // detailedDefinition
-                            parts[i + 5]   // exampleSentence
+                            parts[i + 5],  // exampleSentence
+                            parts[i + 6]   // imagePath
                         );
                         words.add(word);
                     }
@@ -184,15 +186,16 @@ public class DictionaryClient {
             
             String[] parts = response.split("\\|");
             if (parts.length >= 2 && "SUCCESS".equals(parts[0])) {
-                for (int i = 1; i < parts.length; i += 6) {
-                    if (i + 5 < parts.length) {
+                for (int i = 1; i < parts.length; i += 7) {
+                    if (i + 6 < parts.length) {
                         Word word = new Word(
                             parts[i],      // englishWord
                             parts[i + 1],  // partOfSpeech
                             parts[i + 2],  // phoneticSpelling
                             parts[i + 3],  // vietnameseMeaning
                             parts[i + 4],  // detailedDefinition
-                            parts[i + 5]   // exampleSentence
+                            parts[i + 5],  // exampleSentence
+                            parts[i + 6]   // imagePath
                         );
                         results.add(word);
                     }
@@ -216,15 +219,16 @@ public class DictionaryClient {
             
             String[] parts = response.split("\\|");
             if (parts.length >= 2 && "SUCCESS".equals(parts[0])) {
-                for (int i = 1; i < parts.length; i += 6) {
-                    if (i + 5 < parts.length) {
+                for (int i = 1; i < parts.length; i += 7) {
+                    if (i + 6 < parts.length) {
                         Word word = new Word(
                             parts[i],      // englishWord
                             parts[i + 1],  // partOfSpeech
                             parts[i + 2],  // phoneticSpelling
                             parts[i + 3],  // vietnameseMeaning
                             parts[i + 4],  // detailedDefinition
-                            parts[i + 5]   // exampleSentence
+                            parts[i + 5],  // exampleSentence
+                            parts[i + 6]   // imagePath
                         );
                         results.add(word);
                     }
@@ -248,15 +252,16 @@ public class DictionaryClient {
             
             String[] parts = response.split("\\|");
             if (parts.length >= 2 && "SUCCESS".equals(parts[0])) {
-                for (int i = 1; i < parts.length; i += 6) {
-                    if (i + 5 < parts.length) {
+                for (int i = 1; i < parts.length; i += 7) {
+                    if (i + 6 < parts.length) {
                         Word word = new Word(
                             parts[i],      // englishWord
                             parts[i + 1],  // partOfSpeech
                             parts[i + 2],  // phoneticSpelling
                             parts[i + 3],  // vietnameseMeaning
                             parts[i + 4],  // detailedDefinition
-                            parts[i + 5]   // exampleSentence
+                            parts[i + 5],  // exampleSentence
+                            parts[i + 6]   // imagePath
                         );
                         words.add(word);
                     }
