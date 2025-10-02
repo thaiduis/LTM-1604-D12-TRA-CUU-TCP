@@ -22,13 +22,14 @@ public class DictionaryClientGUI extends JFrame {
     private JLabel connectionStatusLabel;
     private JButton searchButton, searchContainingButton, refreshButton, reconnectButton;
     private Timer connectionTimer;
-    private DefaultTableModel historyModel; // thêm biến global để cập nhật lịch sử
+    private DefaultTableModel historyModel; 
     private JTable historyTable;
     private JPanel historyContentPanel;
     private boolean fromHistoryClick = false;
-    private JComboBox<String> directionCombo; // Dropdown chọn chiều dịch
-    private CSVLogger csvLogger; // Logger để ghi lịch sử ra CSV
+    private JComboBox<String> directionCombo; 
+    private CSVLogger csvLogger; 
     private JPopupMenu suggestionPopup;
+    
 
     // Panel chứa card chi tiết
     private JPanel detailContentPanel;
@@ -62,13 +63,29 @@ public class DictionaryClientGUI extends JFrame {
         // Search field Material
         searchField = MaterialUIUtils.createSearchField();
 
+        // Timer cho gợi ý và tự động tìm kiếm
+        javax.swing.Timer suggestionTimer = new javax.swing.Timer(300, e -> showSuggestions());
+        suggestionTimer.setRepeats(false);
+        
+        javax.swing.Timer searchTimer = new javax.swing.Timer(500, e -> performAutoSearch());
+        searchTimer.setRepeats(false);
+        
         searchField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             @Override
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { showSuggestions(); }
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { 
+                suggestionTimer.restart();
+                searchTimer.restart(); // Tự động tìm kiếm
+            }
             @Override
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { showSuggestions(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { 
+                suggestionTimer.restart();
+                searchTimer.restart(); // Tự động tìm kiếm
+            }
             @Override
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { showSuggestions(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { 
+                suggestionTimer.restart();
+                searchTimer.restart(); // Tự động tìm kiếm
+            }
         });
         
         
@@ -84,7 +101,7 @@ public class DictionaryClientGUI extends JFrame {
 
 
         // Bảng kết quả
-        String[] columnNames = {"Từ tiếng Anh", "Từ loại", "Phiên âm", "Nghĩa tiếng Việt", "Định nghĩa", "Ví dụ"};
+        String[] columnNames = {"Từ tiếng Anh", "Từ loại", "Phiên âm", "Nghĩa tiếng Việt", "Định nghĩa", "Ví dụ", "Ảnh"};
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override public boolean isCellEditable(int r, int c) { return false; }
         };
@@ -141,6 +158,7 @@ public class DictionaryClientGUI extends JFrame {
         columnModel.getColumn(3).setPreferredWidth(200);
         columnModel.getColumn(4).setPreferredWidth(250);
         columnModel.getColumn(5).setPreferredWidth(200);
+        columnModel.getColumn(6).setPreferredWidth(80); // Cột ảnh
 
         // Các nút
         searchButton = MaterialUIUtils.createMaterialButton("Tìm kiếm", MaterialUIUtils.PRIMARY_COLOR);
@@ -380,13 +398,15 @@ private void addHistoryItem(String directionLabel, Word w) {
 
             // hiển thị chi tiết
             displayWordDetails(
-                ww.getEnglishWord(),
-                ww.getPartOfSpeech(),
-                ww.getPhoneticSpelling(),
-                ww.getVietnameseMeaning(),
-                ww.getDetailedDefinition(),
-                ww.getExampleSentence()
-            );
+    ww.getEnglishWord(),
+    ww.getPartOfSpeech(),
+    ww.getPhoneticSpelling(),
+    ww.getVietnameseMeaning(),
+    ww.getDetailedDefinition(),
+    ww.getExampleSentence(),
+    ww.getImagePath() // ✅ thêm ảnh
+);
+
         }
     });
 
@@ -401,9 +421,8 @@ private void addHistoryItem(String directionLabel, Word w) {
 
     
     
-    
+
     private void setupEventHandlers() {
-        searchField.addActionListener(e -> performSearch());
         searchButton.addActionListener(e -> performSearch());
         searchContainingButton.addActionListener(e -> performSearchContaining());
         refreshButton.addActionListener(e -> clearFields());
@@ -413,18 +432,44 @@ private void addHistoryItem(String directionLabel, Word w) {
             if (!e.getValueIsAdjusting()) {
                 int row = wordTable.getSelectedRow();
                 if (row >= 0) {
-                    Word w = new Word(
-                        (String) tableModel.getValueAt(row, 0),
-                        (String) tableModel.getValueAt(row, 1),
-                        (String) tableModel.getValueAt(row, 2),
-                        (String) tableModel.getValueAt(row, 3),
-                        (String) tableModel.getValueAt(row, 4),
-                        (String) tableModel.getValueAt(row, 5)
-                    );
+                    // Lấy lại Word object từ server để có đầy đủ thông tin ảnh
+                    String englishWord = (String) tableModel.getValueAt(row, 0);
+                    List<Word> fullWords = client.searchWord(englishWord);
+                    
+                    Word w = null;
+                    if (!fullWords.isEmpty()) {
+                        // Tìm từ có cùng từ loại
+                        String partOfSpeech = (String) tableModel.getValueAt(row, 1);
+                        for (Word word : fullWords) {
+                            if (word.getPartOfSpeech().equals(partOfSpeech)) {
+                                w = word;
+                                break;
+                            }
+                        }
+                        if (w == null) w = fullWords.get(0); // Fallback
+                    } else {
+                        // Tạo Word object từ dữ liệu bảng nếu không tìm thấy
+                        w = new Word(
+                            (String) tableModel.getValueAt(row, 0), // English
+                            (String) tableModel.getValueAt(row, 1), // POS
+                            (String) tableModel.getValueAt(row, 2), // Phonetic
+                            (String) tableModel.getValueAt(row, 3), // Vietnamese
+                            (String) tableModel.getValueAt(row, 4), // Definition
+                            (String) tableModel.getValueAt(row, 5), // Example
+                            null  // ImagePath
+                        );
+                    }
                     displayWordDetails(
-                        w.getEnglishWord(), w.getPartOfSpeech(), w.getPhoneticSpelling(),
-                        w.getVietnameseMeaning(), w.getDetailedDefinition(), w.getExampleSentence()
-                    );
+    w.getEnglishWord(),
+    w.getPartOfSpeech(),
+    w.getPhoneticSpelling(),
+    w.getVietnameseMeaning(),
+    w.getDetailedDefinition(),
+    w.getExampleSentence(),
+    w.getImagePath() // ✅
+);
+
+
                     if (!fromHistoryClick) {
                         String dir = (String) directionCombo.getSelectedItem();
                         addHistoryItem(dir, w);   // 👉 chỉ lưu khi user chọn chi tiết
@@ -475,8 +520,23 @@ private void addHistoryItem(String directionLabel, Word w) {
 
     private void performSearch() {
         String word = searchField.getText().trim();
+        performSearchWithText(word, true); // Log activity
+    }
+    
+    private void performAutoSearch() {
+        String word = searchField.getText().trim();
+        performSearchWithText(word, false); // Không log cho auto search
+    }
+    
+    private void performSearchWithText(String word, boolean logActivity) {
         if (word.isEmpty()) {
-            showMessageCard("Vui lòng nhập từ cần tra.");
+            showMessageCard("Nhập từ để bắt đầu tra cứu.");
+            tableModel.setRowCount(0);
+            return;
+        }
+
+        if (client == null || !client.isConnected()) {
+            showMessageCard("Không có kết nối đến server!");
             return;
         }
 
@@ -484,26 +544,35 @@ private void addHistoryItem(String directionLabel, Word w) {
         List<Word> results;
         String header;
         
+        // Tìm kiếm chính xác trước, nếu không có thì tìm chứa
         if ("Anh → Việt".equals(direction)) {
             results = client.searchWord(word);
-            header = "Kết quả cho từ \"" + word + "\"";
+            if (results.isEmpty()) {
+                results = client.searchWordsContaining(word);
+                header = "Các từ chứa \"" + word + "\"";
+            } else {
+                header = "Kết quả cho từ \"" + word + "\"";
+            }
         } else {
             results = client.searchVietnameseWord(word);
-            header = "Kết quả cho từ Việt \"" + word + "\"";
+            if (results.isEmpty()) {
+                results = client.searchVietnameseWordsContaining(word);
+                header = "Các từ Việt chứa \"" + word + "\"";
+            } else {
+                header = "Kết quả cho từ Việt \"" + word + "\"";
+            }
         }
         
         displaySearchResults(results, header);
     
-        // Chỉ thêm vào lịch sử nếu KHÔNG click từ history
-        if (!fromHistoryClick && results.size() == 1) {
-            String dir = (String) directionCombo.getSelectedItem(); // "Anh → Việt" hoặc "Việt → Anh"
+        // Chỉ log khi user chủ động tìm kiếm và có kết quả
+        if (logActivity && !fromHistoryClick && results.size() == 1) {
+            String dir = (String) directionCombo.getSelectedItem();
             addHistoryItem(dir, results.get(0));
-            
-            // Ghi log CSV
             csvLogger.logSearch(word, dir, results.get(0));
         }
         fromHistoryClick = false;
-        
+        SwingUtilities.invokeLater(() -> searchField.requestFocusInWindow());
     }
     
 
@@ -513,7 +582,7 @@ private void addHistoryItem(String directionLabel, Word w) {
             showMessageCard("Vui lòng nhập từ khóa.");
             return;
         }
-    
+
         String direction = (String) directionCombo.getSelectedItem();
         List<Word> results;
         String header;
@@ -533,7 +602,7 @@ private void addHistoryItem(String directionLabel, Word w) {
             Word w = results.get(0);
             displayWordDetails(
                     w.getEnglishWord(), w.getPartOfSpeech(), w.getPhoneticSpelling(),
-                    w.getVietnameseMeaning(), w.getDetailedDefinition(), w.getExampleSentence()
+                    w.getVietnameseMeaning(), w.getDetailedDefinition(), w.getExampleSentence(), w.getImagePath()
             );
             
             // Ghi log CSV cho tìm kiếm chứa
@@ -545,40 +614,121 @@ private void addHistoryItem(String directionLabel, Word w) {
 
     private void displaySearchResults(List<Word> words, String header) {
     tableModel.setRowCount(0);
-    if (words.isEmpty()) {
+        if (words.isEmpty()) {
         showMessageCard("Không tìm thấy kết quả.");
         return;
     }
     for (Word w : words) {
+        // Tạo icon ảnh nhỏ cho bảng
+        String imageDisplay = "Không có";
+        if (w.getImagePath() != null && !w.getImagePath().isEmpty()) {
+            try {
+                ImageIcon icon = new ImageIcon(w.getImagePath());
+                Image img = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+                imageDisplay = "Có ảnh";
+            } catch (Exception e) {
+                imageDisplay = "Lỗi ảnh";
+            }
+        }
+        
         tableModel.addRow(new Object[]{
                 w.getEnglishWord(), w.getPartOfSpeech(), w.getPhoneticSpelling(),
-                w.getVietnameseMeaning(), w.getDetailedDefinition(), w.getExampleSentence()
+                w.getVietnameseMeaning(), w.getDetailedDefinition(), w.getExampleSentence(),
+                imageDisplay
         });
     }
     showMessageCard(header + " (" + words.size() + " kết quả)");
 }
 
-private void displayWordDetails(String eng, String pos, String phon, String vn, String def, String ex) {
+private void displayWordDetails(String eng, String pos, String phon, 
+                                String vn, String def, String ex, String imgPath) {
     detailContentPanel.removeAll();
 
+    // Từ vựng
     detailContentPanel.add(createDetailCard("Từ vựng", eng + "  /" + (phon==null?"":phon) + "/  (" + (pos==null?"":pos) + ")"));
     detailContentPanel.add(Box.createVerticalStrut(12));
 
+    // Nghĩa
     detailContentPanel.add(createDetailCard("Nghĩa tiếng Việt", vn==null?"":vn));
     detailContentPanel.add(Box.createVerticalStrut(12));
 
+    // Định nghĩa
     detailContentPanel.add(createDetailCard("Định nghĩa", def==null?"":def));
     detailContentPanel.add(Box.createVerticalStrut(12));
 
+    // Ví dụ
     if (ex != null && !ex.isEmpty()) {
         detailContentPanel.add(createDetailCard("Ví dụ", ex));
+        detailContentPanel.add(Box.createVerticalStrut(12));
+    }
+
+    // ✅ Ảnh minh họa
+    if (imgPath != null && !imgPath.isEmpty()) {
+        try {
+            java.io.File imageFile = new java.io.File(imgPath);
+            if (imageFile.exists()) {
+                ImageIcon icon = new ImageIcon(imgPath);
+                
+                // Tính toán kích thước ảnh phù hợp
+                int originalWidth = icon.getIconWidth();
+                int originalHeight = icon.getIconHeight();
+                int maxSize = 250;
+                
+                int newWidth, newHeight;
+                if (originalWidth > originalHeight) {
+                    newWidth = maxSize;
+                    newHeight = (originalHeight * maxSize) / originalWidth;
+        } else {
+                    newHeight = maxSize;
+                    newWidth = (originalWidth * maxSize) / originalHeight;
+                }
+                
+                Image img = icon.getImage().getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+                JLabel imgLabel = new JLabel(new ImageIcon(img));
+                imgLabel.setHorizontalAlignment(SwingConstants.CENTER);
+                
+                // Tạo panel chứa ảnh với viền đẹp
+                JPanel imagePanel = new JPanel(new BorderLayout()) {
+                    @Override
+                    protected void paintComponent(Graphics g) {
+                        super.paintComponent(g);
+                        Graphics2D g2 = (Graphics2D) g.create();
+                        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                        g2.setColor(Color.WHITE);
+                        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 12, 12);
+                        g2.setColor(new Color(0, 0, 0, 30));
+                        g2.fillRoundRect(4, 4, getWidth() - 8, getHeight() - 8, 12, 12);
+                        g2.dispose();
+                    }
+                };
+                imagePanel.setOpaque(false);
+                imagePanel.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
+                
+                JLabel titleLabel = new JLabel("Ảnh minh họa");
+                titleLabel.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 15));
+                titleLabel.setForeground(new Color(26, 115, 232));
+                titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+                
+                imagePanel.add(titleLabel, BorderLayout.NORTH);
+                imagePanel.add(imgLabel, BorderLayout.CENTER);
+                
+                detailContentPanel.add(imagePanel);
+                detailContentPanel.add(Box.createVerticalStrut(12));
+            } else {
+                detailContentPanel.add(createDetailCard("Ảnh minh họa", "File ảnh không tồn tại: " + imgPath));
+                detailContentPanel.add(Box.createVerticalStrut(12));
+            }
+        } catch (Exception e) {
+            detailContentPanel.add(createDetailCard("Ảnh minh họa", "Không thể tải ảnh: " + e.getMessage()));
+            detailContentPanel.add(Box.createVerticalStrut(12));
+        }
     }
 
     detailContentPanel.revalidate();
     detailContentPanel.repaint();
-
-    // ❌ Không thêm lịch sử ở đây nữa
 }
+
+
 
 
     private JPanel createDetailCard(String title, String content) {
