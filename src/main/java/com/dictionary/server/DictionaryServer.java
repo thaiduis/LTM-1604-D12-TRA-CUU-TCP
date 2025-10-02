@@ -166,13 +166,14 @@ public class DictionaryServer {
             if (!words.isEmpty()) {
                 StringBuilder result = new StringBuilder("SUCCESS");
                 for (Word word : words) {
-                    result.append(String.format("|%s|%s|%s|%s|%s|%s",
+                    result.append(String.format("|%s|%s|%s|%s|%s|%s|%s",
                         word.getEnglishWord(),
                         word.getPartOfSpeech(),
                         word.getPhoneticSpelling(),
                         word.getVietnameseMeaning(),
                         word.getDetailedDefinition(),
-                        word.getExampleSentence()));
+                        word.getExampleSentence(),
+                        word.getImagePath() != null ? word.getImagePath() : ""));
                 }
                 return result.toString();
             } else {
@@ -185,13 +186,14 @@ public class DictionaryServer {
             if (!words.isEmpty()) {
                 StringBuilder result = new StringBuilder("SUCCESS");
                 for (Word word : words) {
-                    result.append(String.format("|%s|%s|%s|%s|%s|%s",
+                    result.append(String.format("|%s|%s|%s|%s|%s|%s|%s",
                         word.getEnglishWord(),
                         word.getPartOfSpeech(),
                         word.getPhoneticSpelling(),
                         word.getVietnameseMeaning(),
                         word.getDetailedDefinition(),
-                        word.getExampleSentence()));
+                        word.getExampleSentence(),
+                        word.getImagePath() != null ? word.getImagePath() : ""));
                 }
                 return result.toString();
             } else {
@@ -204,13 +206,14 @@ public class DictionaryServer {
             if (!words.isEmpty()) {
                 StringBuilder result = new StringBuilder("SUCCESS");
                 for (Word word : words) {
-                    result.append(String.format("|%s|%s|%s|%s|%s|%s",
+                    result.append(String.format("|%s|%s|%s|%s|%s|%s|%s",
                         word.getEnglishWord(),
                         word.getPartOfSpeech(),
                         word.getPhoneticSpelling(),
                         word.getVietnameseMeaning(),
                         word.getDetailedDefinition(),
-                        word.getExampleSentence()));
+                        word.getExampleSentence(),
+                        word.getImagePath() != null ? word.getImagePath() : ""));
                 }
                 return result.toString();
             } else {
@@ -223,13 +226,14 @@ public class DictionaryServer {
             if (!words.isEmpty()) {
                 StringBuilder result = new StringBuilder("SUCCESS");
                 for (Word word : words) {
-                    result.append(String.format("|%s|%s|%s|%s|%s|%s",
+                    result.append(String.format("|%s|%s|%s|%s|%s|%s|%s",
                         word.getEnglishWord(),
                         word.getPartOfSpeech(),
                         word.getPhoneticSpelling(),
                         word.getVietnameseMeaning(),
                         word.getDetailedDefinition(),
-                        word.getExampleSentence()));
+                        word.getExampleSentence(),
+                        word.getImagePath() != null ? word.getImagePath() : ""));
                 }
                 return result.toString();
             } else {
