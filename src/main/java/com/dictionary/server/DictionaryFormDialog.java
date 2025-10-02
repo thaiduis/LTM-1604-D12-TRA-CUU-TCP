@@ -17,11 +17,14 @@ public class DictionaryFormDialog extends JDialog {
     private JTextField vietnameseField;
     private JTextArea definitionArea;
     private JTextField exampleField;
+    private JTextField imagePathField;
+    private JButton browseImageButton;
     
     private JButton addButton;
     private JButton updateButton;
     private JButton deleteButton;
     private JButton cancelButton;
+    private JButton importButton;
     
     private String currentMode = "add"; // "add", "update", "delete"
     
@@ -68,9 +71,16 @@ public class DictionaryFormDialog extends JDialog {
         exampleField = new JTextField(30);
         exampleField.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 
+        // Ảnh minh họa
+        imagePathField = new JTextField(25);
+        imagePathField.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        imagePathField.setEditable(false);
+        browseImageButton = UIUtils.createStyledButton("Chọn ảnh", UIUtils.PRIMARY_COLOR, new Color(70, 130, 180));
+
         addButton = UIUtils.createStyledButton("Thêm từ mới", UIUtils.SUCCESS_COLOR, new Color(38, 179, 119));
         updateButton = UIUtils.createStyledButton("Cập nhật", UIUtils.PRIMARY_COLOR, new Color(20, 70, 220));
         deleteButton = UIUtils.createStyledButton("Xóa từ", UIUtils.ACCENT_COLOR, new Color(200, 50, 50));
+        importButton = UIUtils.createStyledButton("Import từ file", UIUtils.PRIMARY_COLOR, new Color(80, 100, 220));
         cancelButton = UIUtils.createStyledButton("Hủy", UIUtils.TEXT_SECONDARY, new Color(100, 110, 120));
     }
 
@@ -108,14 +118,30 @@ public class DictionaryFormDialog extends JDialog {
         gbc.gridx = 1; gbc.gridwidth = 2;
         formPanel.add(exampleField, gbc);
 
+        // Thêm trường ảnh minh họa
+        gbc.gridy = 6; gbc.gridx = 0; gbc.gridwidth = 1;
+        formPanel.add(new JLabel("Ảnh minh họa:"), gbc);
+        
+        JPanel imagePanel = new JPanel(new BorderLayout(5, 0));
+        imagePanel.setOpaque(false);
+        imagePanel.add(imagePathField, BorderLayout.CENTER);
+        imagePanel.add(browseImageButton, BorderLayout.EAST);
+        
+        gbc.gridx = 1; gbc.gridwidth = 2;
+        formPanel.add(imagePanel, gbc);
+
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        
         buttonPanel.setOpaque(false);
         buttonPanel.add(addButton);
         buttonPanel.add(updateButton);
         buttonPanel.add(deleteButton);
+        buttonPanel.add(importButton);
         buttonPanel.add(cancelButton);
+        
 
-        gbc.gridy = 6; gbc.gridx = 0; gbc.gridwidth = 3;
+
+        gbc.gridy = 7; gbc.gridx = 0; gbc.gridwidth = 3;
         formPanel.add(buttonPanel, gbc);
 
         add(headerPanel, BorderLayout.NORTH);
@@ -136,7 +162,80 @@ public class DictionaryFormDialog extends JDialog {
         updateButton.addActionListener(e -> updateWord());
         deleteButton.addActionListener(e -> deleteWord());
         cancelButton.addActionListener(e -> dispose());
+        importButton.addActionListener(e -> importWordsFromFile());
+        browseImageButton.addActionListener(e -> browseForImage());
     }
+
+    private void browseForImage() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Chọn ảnh minh họa");
+        
+        // Chỉ cho phép chọn file ảnh
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
+            @Override
+            public boolean accept(java.io.File f) {
+                if (f.isDirectory()) return true;
+                String name = f.getName().toLowerCase();
+                return name.endsWith(".jpg") || name.endsWith(".jpeg") || 
+                       name.endsWith(".png") || name.endsWith(".gif") || name.endsWith(".bmp");
+            }
+            
+            @Override
+            public String getDescription() {
+                return "Ảnh (*.jpg, *.jpeg, *.png, *.gif, *.bmp)";
+            }
+        });
+        
+        int result = fileChooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            java.io.File selectedFile = fileChooser.getSelectedFile();
+            imagePathField.setText(selectedFile.getAbsolutePath());
+        }
+    }
+    private void importWordsFromFile() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Chọn file dữ liệu (CSV)");
+        int result = fileChooser.showOpenDialog(this);
+    
+        if (result == JFileChooser.APPROVE_OPTION) {
+            java.io.File file = fileChooser.getSelectedFile();
+            int count = 0;
+    
+            try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(file))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    // bỏ qua dòng trống hoặc header
+                    if (line.trim().isEmpty() || line.startsWith("english")) continue;
+    
+                    // tách theo dấu phẩy
+                    String[] parts = line.split(",", -1);
+                    if (parts.length < 6) continue; // không đủ dữ liệu
+    
+                    Word word = new Word(
+                        parts[0].trim(), // english
+                        parts[1].trim(), // part of speech
+                        parts[2].trim(), // phonetic
+                        parts[3].trim(), // vietnamese
+                        parts[4].trim(), // definition
+                        parts[5].trim()  // example
+                    );
+    
+                    if (dictionaryDAO.addWord(word)) {
+                        count++;
+                        parentGUI.logActivity("Import", "Đã import: " + word.getEnglishWord());
+                    }
+                }
+    
+                JOptionPane.showMessageDialog(this, "Import thành công " + count + " từ!");
+                parentGUI.refreshWordList();
+    
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Lỗi khi đọc file: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+    
 
     public void showForAdd() {
         currentMode = "add";
@@ -177,6 +276,7 @@ public class DictionaryFormDialog extends JDialog {
         vietnameseField.setText(word.getVietnameseMeaning());
         definitionArea.setText(word.getDetailedDefinition());
         exampleField.setText(word.getExampleSentence());
+        imagePathField.setText(word.getImagePath() != null ? word.getImagePath() : "");
     }
 
     private void setFieldsEditable(boolean editable) {
@@ -186,6 +286,7 @@ public class DictionaryFormDialog extends JDialog {
         vietnameseField.setEditable(editable);
         definitionArea.setEditable(editable);
         exampleField.setEditable(editable);
+        browseImageButton.setEnabled(editable);
     }
 
     private Word createWordFromFields() {
@@ -195,7 +296,8 @@ public class DictionaryFormDialog extends JDialog {
             phoneticField.getText().trim(),
             vietnameseField.getText().trim(),
             definitionArea.getText().trim(),
-            exampleField.getText().trim()
+            exampleField.getText().trim(),
+            imagePathField.getText().trim().isEmpty() ? null : imagePathField.getText().trim()
         );
     }
 
@@ -261,6 +363,7 @@ public class DictionaryFormDialog extends JDialog {
         vietnameseField.setText("");
         definitionArea.setText("");
         exampleField.setText("");
+        imagePathField.setText("");
         setFieldsEditable(true);
     }
 }
