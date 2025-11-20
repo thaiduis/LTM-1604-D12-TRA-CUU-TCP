@@ -63,27 +63,27 @@ Cấu trúc mã nguồn chính:
 
 - 🖥️ Giao diện Server:
 
-![Server GUI](docs/ServerUp.png)
+![Server GUI](docs/Server-Update.png)
 
 ---
 
-![Server GUI](docs/Lichsu.png)
+![Server GUI](docs/LichsuUpdate.png)
 
 ---
 
-![Server GUI](docs/Form.png) 
+![Server GUI](docs/Form-update.png) 
 
 ---
 
 - 💻 Giao diện Client:
 
-![Client GUI](docs/Client.png)
+![Client GUI](docs/Client-Update.png)
 
 ---
 
 - 🔎 Kết quả tra cứu:
 
-![Search Result](docs/Tracuu.png)
+![Search Result](docs/Tracuu-Update.png)
 
 ---
 
