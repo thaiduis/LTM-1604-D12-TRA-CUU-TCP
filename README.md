@@ -21,136 +21,132 @@
 
 ## 📖 1. Giới thiệu
 
-Ứng dụng `quan_ly_cong_viec` là hệ thống quản lý công việc và dự án nhằm hỗ trợ lập kế hoạch, phân công, theo dõi tiến độ và báo cáo kết quả. Hệ thống thích hợp cho nhóm nhỏ, đội phát triển phần mềm, hoặc quản lý nội bộ tổ chức, giúp tăng hiệu suất và minh bạch trong công việc.
+Ứng dụng tra cứu từ điển Anh – Việt được xây dựng theo mô hình client–server sử dụng giao thức TCP Socket. Hệ thống cho phép nhiều người dùng (client) cùng lúc gửi yêu cầu tra cứu từ vựng tiếng Anh và nhận lại nghĩa tiếng Việt từ phía server. Toàn bộ quá trình truyền và nhận dữ liệu diễn ra trên nền TCP, đảm bảo tính tin cậy và toàn vẹn của thông tin.
 
-Các mục tiêu chính:
-- Tổ chức và quản lý dự án, sprint, milestone
-- Tạo, gán và theo dõi công việc (tasks) với trạng thái, ưu tiên và deadline
-- Quản lý thành viên, vai trò và quyền truy cập
-- Ghi nhận lịch sử hoạt động, thông báo và báo cáo tiến độ
-- Hỗ trợ xuất dữ liệu (CSV/JSON) và tích hợp cơ bản với hệ thống khác
-
----
-
-## 🧩 2. Tính năng chính
-
-### 2.1 Quản lý Dự án (Project Management)
-
-- **Tạo & cấu trúc dự án**: tên dự án, mô tả, start/end date, stakeholders.
-- **Milestone / Sprint**: định nghĩa milestone, quản lý sprint, target và trạng thái.
-- **Phân bổ nguồn lực**: gán thành viên vào dự án, theo dõi công suất và vai trò.
-- **Quản lý rủi ro & tài liệu**: ghi chú, tài liệu liên quan, issue tracking liên kết.
-- **Báo cáo dự án**: báo cáo tiến độ, burn-down chart, deliverables theo milestone.
-
-### 2.2 Quản lý Công việc (Task Management)
-
-- **Tạo task chi tiết**: tiêu đề, mô tả, checklist, phụ thuộc (dependency), tag.
-- **Phân công & quyền hạn**: assignee, watchers, thời hạn (deadline), ưu tiên (priority).
-- **Board & Workflow**: Kanban board (To Do → In Progress → Done), kéo-thả chuyển trạng thái.
-- **Thời gian & báo cáo**: ước lượng thời gian, log time, báo cáo thời gian thực hiện.
-- **Tương tác**: bình luận, đính kèm file, mentions và thông báo (notifications).
-- **Quy tắc & automation**: rule tự động chuyển trạng thái, reminder, recurring tasks.
-
+Các chức năng chính:
+- 🔎 Tra cứu nghĩa tiếng Việt theo từ tiếng Anh
+- 🔄 Tra cứu ngược từ tiếng Việt sang tiếng Anh
+- 🧩 Tìm các từ chứa một từ khóa (search containing) - hỗ trợ cả Anh và Việt
+- 📊 Hiển thị thông tin chi tiết: từ loại, phiên âm, định nghĩa, ví dụ
+- 📝 Lưu lịch sử tra cứu với giao diện trực quan và xuất CSV
+- 🗂️ Quản lý từ điển: thêm, sửa, xóa mục từ (qua server/DAO)
+- 👥 Hỗ trợ nhiều client kết nối đồng thời
+- 🖥️ Giao diện đồ họa Material Design cho cả phía Server và Client
+- 📱 Giao diện responsive với animation và hiệu ứng mượt mà
+- 🔗 Theo dõi trạng thái kết nối real-time
 
 ---
 
-## 🛠️ 3. Công nghệ sử dụng
+## 🛠️ 2. Công nghệ sử dụng
 
-- Backend: `Python 3.10+` (Flask / FastAPI) hoặc `Node.js` (Express) — tuỳ cấu hình dự án
-- Frontend: `React` / `Vue` hoặc giao diện web đơn giản (HTML/CSS/JS)
-- Database: `PostgreSQL` / `MySQL` / `SQLite` (tùy trường hợp)
-- Authentication: JWT / Session-based
-- DevOps: Docker, docker-compose cho môi trường phát triển
+<p align="center">
+  <img src="https://img.shields.io/badge/Java-8%2B-007396?style=for-the-badge&logo=java&logoColor=white" alt="Java" />
+  <img src="https://img.shields.io/badge/GUI-Swing-6DB33F?style=for-the-badge&logo=oracle&logoColor=white" alt="Swing" />
+  <img src="https://img.shields.io/badge/MySQL-8.0%2B-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL" />
+  <img src="https://img.shields.io/badge/Maven-3.6%2B-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white" alt="Maven" />
+  <img src="https://img.shields.io/badge/Protocol-TCP%20Socket-0A66C2?style=for-the-badge" alt="TCP" />
+</p>
+
+Cấu trúc mã nguồn chính:
+- 📦 `src/main/java/com/dictionary/client/` — Client TCP, GUI và CSV Logger
+- 🖧 `src/main/java/com/dictionary/server/` — Server TCP, GUI và Form Dialog
+- 🔗 `src/main/java/com/dictionary/database/` — Kết nối DB và DAO
+- 📘 `src/main/java/com/dictionary/model/` — Lớp mô hình `Word`
+- 🎨 `src/main/java/com/dictionary/ui/` — Material Design UI Components
+- 📁 `database/` — Schema SQL và cấu trúc cơ sở dữ liệu
+- 📄 `*.csv` — File log lịch sử tra cứu và hoạt động
+- 🚀 `*.bat` — Script build và chạy ứng dụng
 
 ---
 
-## 🧭 4. Cài đặt & Chạy nhanh (Quickstart)
+## 🖼️ 3. Một số hình ảnh hệ thống
 
-*LƯU Ý*: các hướng dẫn dưới đây là mẫu; điều chỉnh theo stack thực tế trong repo.
+- 🖥️ Giao diện Server:
 
-### 4.1. Yêu cầu
-- Python 3.10+ / Node.js 16+
-- Docker & docker-compose (khuyến nghị)
-- PostgreSQL / MySQL (nếu không dùng Docker)
+![Server GUI](docs/Server-Update.png)
 
-### 4.2. Chạy bằng Docker (gợi ý)
+---
+
+![Server GUI](docs/LichsuUpdate.png)
+
+---
+
+![Server GUI](docs/Form-update.png) 
+
+---
+
+- 💻 Giao diện Client:
+
+![Client GUI](docs/Client-Update.png)
+
+---
+
+- 🔎 Kết quả tra cứu:
+
+![Search Result](docs/Tracuu-Update.png)
+
+---
+
+## 🧭 4. Các bước cài đặt
+
+### 4.1. Yêu cầu hệ thống
+- 🪟 Windows/Linux/macOS
+- ☕ Java 8 trở lên (kiểm tra bằng `java -version`)
+- 🚀 Maven 3.6+ (tùy chọn nếu build bằng Maven)
+- 🐬 MySQL Server 5.7+ (khuyến nghị 8.0+)
+
+### 4.2. Cài đặt và chuẩn bị CSDL
+1) 📥 Cài MySQL Server: tải từ trang chính thức `https://dev.mysql.com/downloads/mysql/`
+2) 🗃️ Tạo cơ sở dữ liệu và tài khoản (ví dụ):
+```sql
+CREATE DATABASE dictionary_db;
+CREATE USER 'dictionary_user'@'localhost' IDENTIFIED BY 'your_password';
+GRANT ALL PRIVILEGES ON dictionary_db.* TO 'dictionary_user'@'localhost';
+FLUSH PRIVILEGES;
+```
+3) 🧩 Khởi tạo bảng/dữ liệu mẫu bằng file `database/schema.sql`:
 ```bash
-docker-compose up --build -d
-```
-Truy cập ứng dụng tại `http://localhost:8000` hoặc theo cấu hình.
-
-### 4.3. Cài đặt thủ công (ví dụ Python)
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env
-# cấu hình DATABASE_URL, SECRET_KEY, ...
-alembic upgrade head   # nếu dùng alembic cho migration
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+mysql -u root -p dictionary_db < database/schema.sql
 ```
 
----
-
-## 5. Cấu hình cơ sở dữ liệu
-
-- Tạo database và user theo hướng dẫn DB engine đang sử dụng.
-- File mẫu schema/migration có thể nằm tại `database/schema.sql` hoặc thư mục `migrations/`.
-- Thiết lập biến môi trường `DATABASE_URL` hoặc chỉnh `src/config` tương ứng.
-
----
-
-## 6. Kiến trúc & Cấu trúc mã nguồn
-
-Ví dụ cấu trúc:
-```
-quan_ly_cong_viec/
-├── app/               # backend source
-├── web/               # frontend source
-├── database/          # schema, seeders, migrations
-├── docs/              # hình ảnh, hướng dẫn
-├── docker-compose.yml
-└── README.md
+### 4.3. Cấu hình kết nối CSDL
+Cập nhật thông tin trong `src/main/java/com/dictionary/database/DatabaseConnection.java`:
+```java
+private static final String DB_URL = "jdbc:mysql://localhost:3306/dictionary_db?useSSL=false&serverTimezone=UTC";
+private static final String DB_USER = "root"; // hoặc dictionary_user
+private static final String DB_PASSWORD = "your_password"; // mật khẩu của bạn
 ```
 
-Các module chính:
-- `projects`: quản lý dự án, milestone
-- `tasks`: CRUD tasks, checklist, trạng thái
-- `users`: quản lý user, authentication, role
-- `reports`: sinh báo cáo tiến độ, export
+### 4.4. Build và chạy
+Bạn có thể sử dụng các script `.bat` có sẵn (Windows) hoặc Maven.
 
----
+- 🚀 Cách A: Dùng script
+  - 🧱 Build: chạy `build.bat`
+  - 🖧 Chạy Server: `run-server.bat`
+  - 💻 Chạy Client: `run-client.bat`
 
-## 7. Quy trình làm việc đề xuất (Workflow)
+- ⚙️ Cách B: Dùng Maven
+  - 🧹 Build:
+    ```bash
+    mvn clean package
+    ```
+  - ▶️ (Nếu cấu hình `exec-maven-plugin`) chạy bằng:
+    ```bash
+    mvn exec:java
+    ```
 
-1. Tạo dự án → tạo milestone/sprint → phân công tasks cho thành viên
-2. Thành viên cập nhật trạng thái, log thời gian, thêm comment
-3. Manager review và chuyển task sang Done → lặp cho sprint tiếp theo
-4. Xuất báo cáo tiến độ theo tuần/tháng cho stakeholder
+- 🛠️ Cách C: Chạy thủ công (ví dụ)
+  - 🏗️ Biên dịch:
+    ```bash
+    javac -cp "lib/mysql-connector-java-8.0.33.jar" -d target/classes src/main/java/com/dictionary/**/*.java
+    ```
+  - ▶️ Chạy Server và Client (chỉnh class main tương ứng nếu cần):
+    ```bash
+    java -cp "target/classes;lib/mysql-connector-java-8.0.33.jar" com.dictionary.server.DictionaryServer
+    java -cp "target/classes;lib/mysql-connector-java-8.0.33.jar" com.dictionary.client.DictionaryClientGUI
+    ```
 
----
-
-## 8. Hướng dẫn sử dụng (ngắn)
-
-- Đăng nhập/Đăng ký → Tạo/Chọn dự án
-- Dùng Board để kéo-thả task giữa các trạng thái
-- Click task để xem chi tiết, thêm bình luận và đính kèm
-- Sử dụng bộ lọc để tìm task theo người phụ trách, tag, hoặc deadline
-
----
-
-## 9. Export / Import dữ liệu
-
-- Hỗ trợ xuất CSV cho báo cáo hoặc backup
-- Hỗ trợ import bằng file CSV/JSON theo định dạng mẫu
-
----
-
-## 10. Góp ý & Đóng góp
-
-1. Fork repository → tạo branch feature/bugfix → mở Pull Request
-2. Viết test cho tính năng mới, giữ coding style nhất quán
-3. Mô tả rõ ràng issue/PR: mục tiêu, cách test, ảnh chụp màn hình nếu cần
+Mặc định server lắng nghe trên `localhost:12345` (có thể thay đổi trong mã nguồn server nếu cần).
 
 ---
 
